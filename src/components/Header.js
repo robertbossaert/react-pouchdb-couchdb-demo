@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import media from '../constants';
 import Modal from './common/modal/Modal';
-import Heading from './common/Heading';
 
 /**
  * Styling of the component.
@@ -66,7 +65,7 @@ const Header = () => {
       </StyledParagraph>
       <StyledHeading>Instructions</StyledHeading>
       <StyledParagraph>
-        Fill the field, <strong>hit ENTER</strong> and see it synchronized with PouchDB.
+        Fill the field, hit <strong>ENTER</strong> and see it synchronized with PouchDB.
       </StyledParagraph>
       <StyledParagraph>
         When you go offline, enter and submit text and go back online, it should

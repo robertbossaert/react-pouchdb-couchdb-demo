@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import uuid from 'uuid/v4';
 import styled from 'styled-components';
 
 import Heading from '../components/common/Heading';
@@ -25,9 +26,14 @@ const StyledList = styled.ul`
 
 const StyledListItem = styled.li`
   background: ${props => props.theme.listItem.background};
+  cursor: pointer;
   margin: ${props => props.theme.listItem.margin};
   padding: ${props => props.theme.listItem.padding};
   text-align: left;
+
+  &:hover {
+    background: ${props => props.theme.listItem.backgroundHover};
+  }
 `;
 
 class Home extends Component {
@@ -40,11 +46,12 @@ class Home extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   /**
-   * Update the state on every change.
+   * Update the state on every submit.
    * @param {Object} event
    */
   handleSubmit = e => {
@@ -68,6 +75,18 @@ class Home extends Component {
     this.setState({ [name]: value });
   };
 
+  /**
+   * Update the state on every click.
+   * @param {Object} event
+   */
+  handleClick = index => {
+    const { items } = this.state;
+
+    this.setState({
+      items: items.filter((el, i) => i !== index),
+    });
+  };
+
   render() {
     const { items, itemText } = this.state;
 
@@ -87,8 +106,10 @@ class Home extends Component {
           </InputWrapper>
           <InputWrapper>
             <StyledList>
-              {items.map(item => (
-                <StyledListItem>{item}</StyledListItem>
+              {items.map((item, index) => (
+                <StyledListItem onClick={() => this.handleClick(index)} key={uuid()}>
+                  {item}
+                </StyledListItem>
               ))}
             </StyledList>
             {isEmpty(items) && <div>There are no items yet...</div>}

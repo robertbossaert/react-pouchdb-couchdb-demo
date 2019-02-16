@@ -46,6 +46,7 @@ const yard = {
   },
   listItem: {
     background: colors.gray,
+    backgroundHover: colors.lightRed,
     margin: `0 0 ${metrics.spacing.sm} 0`,
     padding: metrics.spacing.lg,
   },
