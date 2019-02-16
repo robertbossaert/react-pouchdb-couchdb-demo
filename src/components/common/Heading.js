@@ -12,7 +12,7 @@ const StyledHeader = styled.div`
   `};
 
   > * {
-    font-weight: 300;
+    font-weight: ${props => props.theme.heading.fontWeight};
   }
 `;
 

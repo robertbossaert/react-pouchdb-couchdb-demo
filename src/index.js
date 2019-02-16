@@ -1,9 +1,8 @@
-import 'react-app-polyfill/ie11';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ThemeProvider } from 'styled-components';
 
-import { yard } from './themes';
+import yard from './themes';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

@@ -19,17 +19,9 @@ const StyledButton = styled.button`
   font-weight: ${props => props.theme.modalTrigger.fontWeight};
 `;
 
-const StyledIcon = styled.span`
-  background: url("${props => props.theme.modalTrigger.infoIcon}") no-repeat;
-  background-size: contain;
-  height: 30px;
-  display: inline-block;
-  width: 30px;
-`;
-
 const ModalTrigger = ({ buttonRef, onOpen, text }) => (
   <StyledButton type="button" onClick={onOpen} ref={buttonRef}>
-    <StyledIcon /> {text}
+    {text}
   </StyledButton>
 );
 

@@ -4,7 +4,7 @@
  * @type {Object}
  */
 const type = {
-  default: "Helvetica Neue, sans-serif",
+  default: 'Helvetica Neue, sans-serif',
 };
 
 /**

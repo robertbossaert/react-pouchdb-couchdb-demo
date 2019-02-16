@@ -23,6 +23,12 @@ const yard = {
     marginBottom: '40px',
     padding: `${metrics.spacing.xl} ${metrics.spacing.xl}`,
   },
+  heading: {
+    fontWeight: fonts.weight.bold,
+  },
+  link: {
+    color: colors.darkBlue,
+  },
   inputWrapper: {
     margin: `0 0 ${metrics.spacing.lg} 0`,
   },
@@ -37,6 +43,11 @@ const yard = {
     height: '50px',
     padding: metrics.spacing.lg,
     width: '100%',
+  },
+  listItem: {
+    background: colors.gray,
+    margin: `0 0 ${metrics.spacing.sm} 0`,
+    padding: metrics.spacing.lg,
   },
   modalClose: {
     color: colors.blue,
