@@ -59,10 +59,12 @@ class Home extends Component {
 
     const { items, itemText } = this.state;
 
-    this.setState({
-      items: [...items, itemText],
-      itemText: '',
-    });
+    if (itemText) {
+      this.setState({
+        items: [...items, itemText],
+        itemText: '',
+      });
+    }
   };
 
   /**
