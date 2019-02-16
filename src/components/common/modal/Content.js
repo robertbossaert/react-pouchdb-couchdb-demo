@@ -51,18 +51,10 @@ const StyledModalClose = styled.button`
   font-size: ${props => props.theme.modalClose.fontSize};
   font-weight: ${props => props.theme.modalClose.fontWeight};
   line-height: 1;
-  padding: 0.5em;
+  padding: ${props => props.theme.modalClose.padding};
   position: absolute;
   right: 0;
   top: 0;
-`;
-
-const StyledIcon = styled.span`
-  background: url("${props => props.theme.modalClose.infoIcon}") no-repeat;
-  background-size: contain;
-  height: 30px;
-  display: inline-block;
-  width: 30px;
 `;
 
 const StyledModalBody = styled.div`
@@ -95,7 +87,7 @@ const ModalContent = ({
           ref={buttonRef}
           type="button"
         >
-          <StyledIcon /> Close
+          Close
         </StyledModalClose>
         <StyledModalBody>{content}</StyledModalBody>
       </StyledModal>

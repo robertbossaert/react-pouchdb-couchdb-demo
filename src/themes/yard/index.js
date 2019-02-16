@@ -54,6 +54,7 @@ const yard = {
     color: colors.blue,
     fontSize: '18px',
     fontWeight: 'bold',
+    padding: metrics.spacing.xl,
   },
   modalTrigger: {
     color: colors.blue,
