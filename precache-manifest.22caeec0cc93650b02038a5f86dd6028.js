@@ -8,19 +8,19 @@ self.__precacheManifest = [
     "url": "/react-pouchdb-couchdb-demo/static/js/runtime~main.6e2bba6f.js"
   },
   {
-    "revision": "8b57e17cd72179aa0849",
-    "url": "/react-pouchdb-couchdb-demo/static/js/main.8b57e17c.chunk.js"
+    "revision": "6df349f473e4aa228e51",
+    "url": "/react-pouchdb-couchdb-demo/static/js/main.6df349f4.chunk.js"
   },
   {
-    "revision": "2738acf39559d53973ba",
-    "url": "/react-pouchdb-couchdb-demo/static/js/2.2738acf3.chunk.js"
+    "revision": "cced027df0ab2c16cad6",
+    "url": "/react-pouchdb-couchdb-demo/static/js/2.cced027d.chunk.js"
   },
   {
-    "revision": "2738acf39559d53973ba",
+    "revision": "cced027df0ab2c16cad6",
     "url": "/react-pouchdb-couchdb-demo/static/css/2.a68454f9.chunk.css"
   },
   {
-    "revision": "7b25b9fd178ca30625107f63f09244c8",
+    "revision": "30e39a472bc8949bc1ff2518878385ed",
     "url": "/react-pouchdb-couchdb-demo/index.html"
   }
 ];
