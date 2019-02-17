@@ -104,10 +104,16 @@ const Header = () => {
       </StyledParagraph>
       <StyledHeading>Instructions</StyledHeading>
       <StyledParagraph>
-        Fill the field, hit <strong>ENTER</strong> and see it synchronized with PouchDB.
+        1. Fill the field, hit <strong>ENTER</strong> and the changes will be replicated to the
+        local and remote databases.
       </StyledParagraph>
       <StyledParagraph>
-        When you go offline, enter and submit text and go back online, it should
+        2. Try opening this page on a different browser or device and you should be able to see the
+        changes reflected on each of them.
+      </StyledParagraph>
+      <StyledParagraph>
+        3. Try going offline completely, you should be able to use the application just fine. Once
+        you go back online, the changes will automatically catch up again.
       </StyledParagraph>
     </div>
   );

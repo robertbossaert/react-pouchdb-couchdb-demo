@@ -58,7 +58,7 @@ class Home extends Component {
           items: results.rows.map(row => row.doc),
         });
       })
-      .catch(err => console.log.bind(console, '[Fetch all]'));
+      .catch(err => console.warn(err));
 
     if (this.dbContainer.remoteDB) {
       this.syncToRemote();
