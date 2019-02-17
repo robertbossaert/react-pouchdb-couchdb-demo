@@ -44,16 +44,24 @@ const StyledStatus = styled.div`
 
   .online {
     background-color: ${props => props.theme.onlineStatus.background};
-    border-radius: 5px;
-    padding: 5px;
-    width: 200px;
+    border-radius: ${props => props.theme.onlineStatus.borderRadius};
+    font-size: ${props => props.theme.onlineStatus.fontSize};
+    padding: ${props => props.theme.onlineStatus.padding};
+
+    ${media.tablet`
+      font-size: ${props => props.theme.onlineStatus.fontSizeTablet};
+    `};
   }
 
   .offline {
     background-color: ${props => props.theme.offlineStatus.background};
-    border-radius: 5px;
-    padding: 5px;
-    width: 200px;
+    border-radius: ${props => props.theme.offlineStatus.borderRadius};
+    font-size: ${props => props.theme.offlineStatus.fontSize};
+    padding: ${props => props.theme.offlineStatus.padding};
+
+    ${media.tablet`
+      font-size: ${props => props.theme.offlineStatus.fontSizeTablet};
+    `};
   }
 `;
 
