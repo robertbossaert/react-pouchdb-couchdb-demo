@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Provider } from 'unstated';
+import ReactNotification from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 import DbContainer from './store/state';
 import Header from './components/Header';
@@ -56,11 +58,93 @@ const StyledContainer = styled.div`
   flex-direction: column;
 `;
 
+const notificationOptions = {
+  insert: 'top',
+  container: 'bottom-right',
+  animationIn: ['animated', 'fadeIn'],
+  animationOut: ['animated', 'fadeOut'],
+  dismiss: { duration: 5000 },
+  dismissable: { click: true },
+};
+
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.dbContainer = new DbContainer('react-pouchdb-couchdb-demo');
+    this.notificationDOMRef = React.createRef();
+  }
+
+  /**
+   * If a remote DB is intialized, synchronize local CouchDB with a remote CouchDB
+   */
+  componentDidMount() {
+    if (this.dbContainer.remoteDB) {
+      this.syncToRemote();
+    }
+  }
+
+  /**
+   * Synchronize local PouchDB with a remote CouchDB
+   */
+  syncToRemote() {
+    const { localDB, remoteDB } = this.dbContainer;
+
+    this.dbContainer.getItems().then(items => this.dbContainer.updateState(items));
+
+    localDB
+      .sync(remoteDB, {
+        live: true,
+      })
+      .on('change', () => {
+        this.dbContainer.getItems().then(items => this.dbContainer.updateState(items));
+      })
+      .on('paused', () => {
+        // console.log('paused', err);
+        this.notificationDOMRef.current.addNotification({
+          title: 'Paused',
+          message: 'replication paused (e.g. replication up to date, user went offline)',
+          type: 'info',
+          ...notificationOptions,
+        });
+      })
+      .on('active', () => {
+        // console.log('active');
+        this.notificationDOMRef.current.addNotification({
+          title: 'Active',
+          message: 'replicate resumed (e.g. new changes replicating, user went back online)',
+          type: 'success',
+          ...notificationOptions,
+        });
+      })
+      .on('denied', () => {
+        // console.log('denied', err);
+        this.notificationDOMRef.current.addNotification({
+          title: 'Denied',
+          message: 'a document failed to replicate (e.g. due to permissions)',
+          type: 'danger',
+          ...notificationOptions,
+        });
+      })
+      .on('complete', info => {
+        // console.log('complete', info);
+        this.notificationDOMRef.current.addNotification({
+          title: 'Complete',
+          message: `${info}`,
+          type: 'success',
+          ...notificationOptions,
+        });
+      })
+      .on('error', err => {
+        // console.log('error');
+        // console.log(JSON.stringify(err));
+        this.notificationDOMRef.current.addNotification({
+          title: 'Error',
+          message: `${JSON.stringify(err)}`,
+          type: 'danger',
+          ...notificationOptions,
+        });
+      });
   }
 
   render() {
@@ -70,6 +154,7 @@ class App extends Component {
           <GlobalStyle />
           <Header />
           <Home />
+          <ReactNotification ref={this.notificationDOMRef} />
         </StyledContainer>
       </Provider>
     );

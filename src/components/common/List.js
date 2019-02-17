@@ -30,15 +30,21 @@ const StyledListItem = styled.li`
 `;
 
 class List extends PureComponent {
+  state = {
+    items: {},
+  };
+
   render() {
     const { handleClick, items } = this.props;
+
+    console.warn(Object.values(items).map(item => console.warn(item)));
 
     return (
       <InputWrapper>
         <StyledList>
-          {items.map((item, index) => (
+          {Object.values(items).map((item, index) => (
             <StyledListItem onClick={handleClick(index)} key={uuid()}>
-              {item}
+              {item.itemText}
             </StyledListItem>
           ))}
         </StyledList>
@@ -49,7 +55,7 @@ class List extends PureComponent {
 }
 
 List.propTypes = {
-  items: PropTypes.instanceOf(Array).isRequired,
+  items: PropTypes.instanceOf(Object).isRequired,
   handleClick: PropTypes.func.isRequired,
 };
 

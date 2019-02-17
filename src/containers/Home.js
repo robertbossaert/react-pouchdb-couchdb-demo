@@ -25,7 +25,6 @@ class Home extends Component {
 
     this.state = {
       itemText: '',
-      items: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -39,8 +38,6 @@ class Home extends Component {
    */
   handleChange = e => {
     const { name, value } = e.target;
-
-    console.warn(name, value);
 
     this.setState({ [name]: value });
   };
@@ -64,19 +61,20 @@ class Home extends Component {
   handleSubmit = (e, db) => {
     e.preventDefault();
 
-    const { items, itemText } = this.state;
+    const { itemText } = this.state;
 
     if (itemText) {
+      // Save item to the database
       db.saveItem({ itemText });
+
       this.setState({
-        items: [...items, itemText],
         itemText: '',
       });
     }
   };
 
   render() {
-    const { items, itemText } = this.state;
+    const { itemText } = this.state;
 
     return (
       <ViewWrapper center>
@@ -94,7 +92,7 @@ class Home extends Component {
                   value={itemText}
                 />
               </InputWrapper>
-              <List items={items} handleClick={() => this.handleClick} />
+              <List items={db.state.items} handleClick={() => this.handleClick} />
             </form>
           )}
         </Subscribe>
