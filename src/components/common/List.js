@@ -30,21 +30,31 @@ const StyledListItem = styled.li`
 `;
 
 class List extends PureComponent {
-  state = {
-    items: {},
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  /**
+   * Update the state on every click.
+   * @param {Object} event
+   */
+  handleClick = item => {
+    const { handleClick } = this.props;
+
+    handleClick(item);
   };
 
   render() {
-    const { handleClick, items } = this.props;
-
-    console.warn(Object.values(items).map(item => console.warn(item)));
+    const { items } = this.props;
 
     return (
       <InputWrapper>
         <StyledList>
-          {Object.values(items).map((item, index) => (
-            <StyledListItem onClick={handleClick(index)} key={uuid()}>
-              {item.itemText}
+          {Object.values(items).map(item => (
+            <StyledListItem onClick={() => this.handleClick(item)} key={uuid()}>
+              {item.value}
             </StyledListItem>
           ))}
         </StyledList>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Subscribe } from 'unstated';
+import find from 'lodash/find';
+import ReactNotification from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 import DbContainer from '../store/state';
 import InputWrapper from '../components/InputWrapper';
@@ -19,18 +21,79 @@ const StyledParagraph = styled.p`
   margin: 0 0 20px;
 `;
 
+const notificationOptions = {
+  insert: 'top',
+  container: 'bottom-right',
+  animationIn: ['animated', 'fadeIn'],
+  animationOut: ['animated', 'fadeOut'],
+  dismiss: { duration: 5000 },
+  dismissable: { click: true },
+};
+
 class Home extends Component {
   constructor(props) {
     super(props);
 
+    this.dbContainer = new DbContainer('react-pouchdb-couchdb-demo');
+
     this.state = {
+      items: [],
       itemText: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleDbChange = this.handleDbChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.notificationDOMRef = React.createRef();
   }
+
+  componentDidMount() {
+    const { localDB } = this.dbContainer;
+
+    localDB
+      .allDocs({ include_docs: true })
+      .then(results => {
+        this.setState({
+          items: results.rows.map(row => row.doc),
+        });
+      })
+      .catch(err => console.log.bind(console, '[Fetch all]'));
+
+    if (this.dbContainer.remoteDB) {
+      this.syncToRemote();
+    }
+
+    localDB
+      .changes({
+        live: true,
+        include_docs: true,
+      })
+      .on('change', this.handleDbChange)
+      .on('complete', console.log.bind(console, '[Change:Complete]'))
+      .on('error', console.log.bind(console, '[Change:Error]'));
+  }
+
+  /**
+   * Update the state on every submit.
+   * @param {Object} event
+   */
+  handleSubmit = (e, item) => {
+    e.preventDefault();
+
+    const { localDB } = this.dbContainer;
+    const { itemText } = this.state;
+
+    if (itemText) {
+      // Save item to the database
+      localDB.post({ value: item }).catch(console.log.bind(console, 'Error inserting'));
+
+      // Clear the input field
+      this.setState({
+        itemText: '',
+      });
+    }
+  };
 
   /**
    * Update the state on every change.
@@ -43,59 +106,128 @@ class Home extends Component {
   };
 
   /**
-   * Update the state on every click.
+   * Update on local db changes
    * @param {Object} event
    */
-  handleClick = index => {
-    const { items } = this.state;
+  handleDbChange = change => {
+    const { doc } = change;
 
-    this.setState({
-      items: items.filter((el, i) => i !== index),
-    });
-  };
+    if (!doc) {
+      return;
+    }
 
-  /**
-   * Update the state on every submit.
-   * @param {Object} event
-   */
-  handleSubmit = (e, db) => {
-    e.preventDefault();
-
-    const { itemText } = this.state;
-
-    if (itemText) {
-      // Save item to the database
-      db.saveItem({ itemText });
-
-      this.setState({
-        itemText: '',
-      });
+    if (doc._deleted) {
+      this.removeItem(doc);
+    } else {
+      this.addItem(doc);
     }
   };
 
+  /**
+   * Update the state on every click.
+   * @param {Object} event
+   */
+  handleClick = item => {
+    const { localDB } = this.dbContainer;
+
+    localDB.remove(item).catch(console.log.bind(console, 'Error removing'));
+  };
+
+  addItem(newItem) {
+    const { items } = this.state;
+
+    if (find(items, '_id', newItem._id)) {
+      this.setState({
+        items: items.concat(newItem),
+      });
+    }
+  }
+
+  removeItem(oldItem) {
+    const { items } = this.state;
+
+    this.setState({
+      items: items.filter(doc => doc._id !== oldItem._id),
+    });
+  }
+
+  /**
+   * Synchronize local PouchDB with a remote CouchDB
+   */
+  syncToRemote() {
+    const { localDB, remoteDB } = this.dbContainer;
+
+    localDB
+      .sync(remoteDB, {
+        live: true,
+        retry: true,
+      })
+      .on('change', () => {
+        // this.dbContainer.getItems().then(items => this.dbContainer.updateState(items));
+      })
+      .on('paused', () => {
+        this.notificationDOMRef.current.addNotification({
+          title: 'Paused',
+          message: 'replication paused (e.g. replication up to date, user went offline)',
+          type: 'info',
+          ...notificationOptions,
+        });
+      })
+      .on('active', () => {
+        this.notificationDOMRef.current.addNotification({
+          title: 'Active',
+          message: 'replicate resumed (e.g. new changes replicating, user went back online)',
+          type: 'success',
+          ...notificationOptions,
+        });
+      })
+      .on('denied', () => {
+        this.notificationDOMRef.current.addNotification({
+          title: 'Denied',
+          message: 'a document failed to replicate (e.g. due to permissions)',
+          type: 'danger',
+          ...notificationOptions,
+        });
+      })
+      .on('complete', info => {
+        this.notificationDOMRef.current.addNotification({
+          title: 'Complete',
+          message: `${info}`,
+          type: 'success',
+          ...notificationOptions,
+        });
+      })
+      .on('error', err => {
+        this.notificationDOMRef.current.addNotification({
+          title: 'Error',
+          message: `${JSON.stringify(err)}`,
+          type: 'danger',
+          ...notificationOptions,
+        });
+      });
+  }
+
   render() {
-    const { itemText } = this.state;
+    const { items, itemText } = this.state;
 
     return (
       <ViewWrapper center>
         <Heading center size={2} title="Enter some text!" />
         <StyledParagraph>Follow the instructions inside the info tab above.</StyledParagraph>
-        <Subscribe to={[DbContainer]}>
-          {db => (
-            <form onSubmit={e => this.handleSubmit(e, db)}>
-              <InputWrapper>
-                <TextInput
-                  name="itemText"
-                  onChange={this.handleChange}
-                  placeholder="Some text"
-                  type="text"
-                  value={itemText}
-                />
-              </InputWrapper>
-              <List items={db.state.items} handleClick={() => this.handleClick} />
-            </form>
-          )}
-        </Subscribe>
+        <form onSubmit={e => this.handleSubmit(e, itemText)}>
+          <InputWrapper>
+            <TextInput
+              name="itemText"
+              onChange={this.handleChange}
+              placeholder="Some text"
+              type="text"
+              value={itemText}
+            />
+          </InputWrapper>
+          <List items={items} handleClick={this.handleClick} />
+        </form>
+
+        <ReactNotification ref={this.notificationDOMRef} />
       </ViewWrapper>
     );
   }
