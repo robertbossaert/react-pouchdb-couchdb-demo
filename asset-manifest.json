@@ -1,12 +1,14 @@
 {
-  "main.js": "/react-pouchdb-couchdb-demo/static/js/main.c7cd32c0.chunk.js",
-  "main.js.map": "/react-pouchdb-couchdb-demo/static/js/main.c7cd32c0.chunk.js.map",
+  "main.js": "/react-pouchdb-couchdb-demo/static/js/main.4ff31edf.chunk.js",
+  "main.js.map": "/react-pouchdb-couchdb-demo/static/js/main.4ff31edf.chunk.js.map",
   "runtime~main.js": "/react-pouchdb-couchdb-demo/static/js/runtime~main.6e2bba6f.js",
   "runtime~main.js.map": "/react-pouchdb-couchdb-demo/static/js/runtime~main.6e2bba6f.js.map",
-  "static/js/2.872d8581.chunk.js": "/react-pouchdb-couchdb-demo/static/js/2.872d8581.chunk.js",
-  "static/js/2.872d8581.chunk.js.map": "/react-pouchdb-couchdb-demo/static/js/2.872d8581.chunk.js.map",
+  "static/css/2.a68454f9.chunk.css": "/react-pouchdb-couchdb-demo/static/css/2.a68454f9.chunk.css",
+  "static/js/2.1a8794ff.chunk.js": "/react-pouchdb-couchdb-demo/static/js/2.1a8794ff.chunk.js",
+  "static/js/2.1a8794ff.chunk.js.map": "/react-pouchdb-couchdb-demo/static/js/2.1a8794ff.chunk.js.map",
   "index.html": "/react-pouchdb-couchdb-demo/index.html",
-  "precache-manifest.1d9ae4eaedb9b6a92b67ce544261a8bf.js": "/react-pouchdb-couchdb-demo/precache-manifest.1d9ae4eaedb9b6a92b67ce544261a8bf.js",
+  "precache-manifest.720828a641d4946dd001c0d298ffd379.js": "/react-pouchdb-couchdb-demo/precache-manifest.720828a641d4946dd001c0d298ffd379.js",
   "service-worker.js": "/react-pouchdb-couchdb-demo/service-worker.js",
+  "static/css/2.a68454f9.chunk.css.map": "/react-pouchdb-couchdb-demo/static/css/2.a68454f9.chunk.css.map",
   "static/media/logo.png": "/react-pouchdb-couchdb-demo/static/media/logo.311a680a.png"
 }
