@@ -19,7 +19,7 @@ class DbContainer extends Container<DbState> {
       const credentials = require('../secret');
       const { cloudantUrl, username, password } = credentials.default;
 
-      if (credentials.default.cloudant_url) {
+      if (credentials.default.cloudantUrl) {
         this.remoteDB = new PouchDB(cloudantUrl, {
           auth: { username, password },
         });
