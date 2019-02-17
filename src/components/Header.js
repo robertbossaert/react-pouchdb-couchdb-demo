@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Detector } from 'react-detect-offline';
 
 import media from '../constants';
 import Modal from './common/modal/Modal';
@@ -14,9 +15,14 @@ const StyledHeader = styled.div`
   background: ${props => props.theme.header.background};
   box-shadow: ${props => props.theme.header.boxShadow};
   display: flex;
+  margin-bottom: ${props => props.theme.header.marginBottom};
   padding: ${props => props.theme.header.padding};
   position: relative;
-  margin-bottom: ${props => props.theme.header.marginBottom};
+  width: 100%;
+
+  > * {
+    flex: 1;
+  }
 `;
 
 const StyledLogo = styled.a`
@@ -29,6 +35,31 @@ const StyledLogo = styled.a`
   ${media.tablet`
     height: ${props => props.theme.document.logoHeightTablet};
   `};
+`;
+
+const StyledStatus = styled.div`
+  display: flex;
+  text-align: center;
+  justify-content: center;
+
+  .online {
+    background-color: ${props => props.theme.onlineStatus.background};
+    border-radius: 5px;
+    padding: 5px;
+    width: 200px;
+  }
+
+  .offline {
+    background-color: ${props => props.theme.offlineStatus.background};
+    border-radius: 5px;
+    padding: 5px;
+    width: 200px;
+  }
+`;
+
+const StyledModalButton = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const StyledHeading = styled.h2`
@@ -81,7 +112,18 @@ const Header = () => {
   return (
     <StyledHeader>
       <StyledLogo href={url} target="_blank" rel="noopener noreferrer" />
-      <Modal {...modalProps}>{modalContent}</Modal>
+      <StyledStatus>
+        <Detector
+          render={({ online }) => (
+            <div className={online ? 'online' : 'offline'}>
+              You are currently {online ? 'online' : 'offline'}
+            </div>
+          )}
+        />
+      </StyledStatus>
+      <StyledModalButton>
+        <Modal {...modalProps}>{modalContent}</Modal>
+      </StyledModalButton>
     </StyledHeader>
   );
 };

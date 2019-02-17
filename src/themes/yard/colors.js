@@ -8,6 +8,9 @@ const colors = {
   black: '#000',
   blue: '#03bde2',
   darkBlue: '#0293b0',
+
+  offline: '#f94a58',
+  online: '#0cd29c',
 };
 
 export default colors;

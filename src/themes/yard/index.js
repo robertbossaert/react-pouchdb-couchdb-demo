@@ -61,6 +61,12 @@ const yard = {
     fontSize: '18px',
     fontWeight: 'bold',
   },
+  offlineStatus: {
+    background: colors.offline,
+  },
+  onlineStatus: {
+    background: colors.online,
+  },
 };
 
 export default yard;

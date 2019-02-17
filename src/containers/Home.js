@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import uuid from 'uuid/v4';
 import styled from 'styled-components';
+import { Subscribe } from 'unstated';
 
-import Heading from '../components/common/Heading';
+import DbContainer from '../store/state';
 import InputWrapper from '../components/InputWrapper';
-import isEmpty from '../utils/is-empty';
+import Heading from '../components/common/Heading';
+import List from '../components/common/List';
 import TextInput from '../components/common/TextInput';
 import ViewWrapper from '../components/ViewWrapper';
 
@@ -16,24 +17,6 @@ import ViewWrapper from '../components/ViewWrapper';
 const StyledParagraph = styled.p`
   font-size: 16px;
   margin: 0 0 20px;
-`;
-
-const StyledList = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`;
-
-const StyledListItem = styled.li`
-  background: ${props => props.theme.listItem.background};
-  cursor: pointer;
-  margin: ${props => props.theme.listItem.margin};
-  padding: ${props => props.theme.listItem.padding};
-  text-align: left;
-
-  &:hover {
-    background: ${props => props.theme.listItem.backgroundHover};
-  }
 `;
 
 class Home extends Component {
@@ -51,28 +34,13 @@ class Home extends Component {
   }
 
   /**
-   * Update the state on every submit.
-   * @param {Object} event
-   */
-  handleSubmit = e => {
-    e.preventDefault();
-
-    const { items, itemText } = this.state;
-
-    if (itemText) {
-      this.setState({
-        items: [...items, itemText],
-        itemText: '',
-      });
-    }
-  };
-
-  /**
    * Update the state on every change.
    * @param {Object} event
    */
   handleChange = e => {
     const { name, value } = e.target;
+
+    console.warn(name, value);
 
     this.setState({ [name]: value });
   };
@@ -89,6 +57,24 @@ class Home extends Component {
     });
   };
 
+  /**
+   * Update the state on every submit.
+   * @param {Object} event
+   */
+  handleSubmit = (e, db) => {
+    e.preventDefault();
+
+    const { items, itemText } = this.state;
+
+    if (itemText) {
+      db.saveItem({ itemText });
+      this.setState({
+        items: [...items, itemText],
+        itemText: '',
+      });
+    }
+  };
+
   render() {
     const { items, itemText } = this.state;
 
@@ -96,27 +82,22 @@ class Home extends Component {
       <ViewWrapper center>
         <Heading center size={2} title="Enter some text!" />
         <StyledParagraph>Follow the instructions inside the info tab above.</StyledParagraph>
-        <form onSubmit={this.handleSubmit}>
-          <InputWrapper>
-            <TextInput
-              name="itemText"
-              onChange={this.handleChange}
-              placeholder="Some text"
-              type="text"
-              value={itemText}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <StyledList>
-              {items.map((item, index) => (
-                <StyledListItem onClick={() => this.handleClick(index)} key={uuid()}>
-                  {item}
-                </StyledListItem>
-              ))}
-            </StyledList>
-            {isEmpty(items) && <div>There are no items yet...</div>}
-          </InputWrapper>
-        </form>
+        <Subscribe to={[DbContainer]}>
+          {db => (
+            <form onSubmit={e => this.handleSubmit(e, db)}>
+              <InputWrapper>
+                <TextInput
+                  name="itemText"
+                  onChange={this.handleChange}
+                  placeholder="Some text"
+                  type="text"
+                  value={itemText}
+                />
+              </InputWrapper>
+              <List items={items} handleClick={() => this.handleClick} />
+            </form>
+          )}
+        </Subscribe>
       </ViewWrapper>
     );
   }

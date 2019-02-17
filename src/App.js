@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import { Provider } from 'unstated';
 
+import DbContainer from './store/state';
 import Header from './components/Header';
 import Home from './containers/Home';
 
@@ -54,12 +56,24 @@ const StyledContainer = styled.div`
   flex-direction: column;
 `;
 
-const App = () => (
-  <StyledContainer>
-    <GlobalStyle />
-    <Header />
-    <Home />
-  </StyledContainer>
-);
+class App extends Component {
+  constructor() {
+    super();
+
+    this.dbContainer = new DbContainer('react-pouchdb-couchdb-demo');
+  }
+
+  render() {
+    return (
+      <Provider inject={[this.dbContainer]}>
+        <StyledContainer>
+          <GlobalStyle />
+          <Header />
+          <Home />
+        </StyledContainer>
+      </Provider>
+    );
+  }
+}
 
 export default App;
