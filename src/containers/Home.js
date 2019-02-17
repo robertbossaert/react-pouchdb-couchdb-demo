@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import find from 'lodash/find';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
@@ -69,16 +68,14 @@ class Home extends Component {
         live: true,
         include_docs: true,
       })
-      .on('change', this.handleDbChange)
-      .on('complete', console.log.bind(console, '[Change:Complete]'))
-      .on('error', console.log.bind(console, '[Change:Error]'));
+      .on('change', this.handleDbChange);
   }
 
   /**
    * Update the state on every submit.
    * @param {Object} event
    */
-  handleSubmit = (e, item) => {
+  handleSubmit = e => {
     e.preventDefault();
 
     const { localDB } = this.dbContainer;
@@ -86,7 +83,7 @@ class Home extends Component {
 
     if (itemText) {
       // Save item to the database
-      localDB.post({ value: item }).catch(console.log.bind(console, 'Error inserting'));
+      localDB.post({ value: itemText }).catch(console.log.bind(console, 'Error inserting'));
 
       // Clear the input field
       this.setState({
@@ -127,20 +124,20 @@ class Home extends Component {
    * Update the state on every click.
    * @param {Object} event
    */
-  handleClick = item => {
+  handleClick = oldItem => {
     const { localDB } = this.dbContainer;
 
-    localDB.remove(item).catch(console.log.bind(console, 'Error removing'));
+    localDB.remove(oldItem).catch(console.log.bind(console, 'Error removing'));
   };
 
   addItem(newItem) {
     const { items } = this.state;
 
-    if (find(items, '_id', newItem._id)) {
-      this.setState({
-        items: items.concat(newItem),
-      });
-    }
+    if (items.find(item => item._id === newItem._id)) return;
+
+    this.setState({
+      items: [...items, newItem],
+    });
   }
 
   removeItem(oldItem) {
@@ -163,7 +160,7 @@ class Home extends Component {
         retry: true,
       })
       .on('change', () => {
-        // this.dbContainer.getItems().then(items => this.dbContainer.updateState(items));
+        // this.handleDbChange();
       })
       .on('paused', () => {
         this.notificationDOMRef.current.addNotification({
@@ -214,7 +211,7 @@ class Home extends Component {
       <ViewWrapper center>
         <Heading center size={2} title="Enter some text!" />
         <StyledParagraph>Follow the instructions inside the info tab above.</StyledParagraph>
-        <form onSubmit={e => this.handleSubmit(e, itemText)}>
+        <form onSubmit={this.handleSubmit}>
           <InputWrapper>
             <TextInput
               name="itemText"

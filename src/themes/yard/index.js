@@ -63,6 +63,10 @@ const yard = {
   },
   offlineStatus: {
     background: colors.offline,
+    borderRadius: '5px',
+    fontSize: '12px',
+    fontSizeTablet: fonts.size.default,
+    padding: `${metrics.spacing.sm} ${metrics.spacing.md}`,
   },
   onlineStatus: {
     background: colors.online,
